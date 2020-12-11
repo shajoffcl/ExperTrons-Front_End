@@ -1,29 +1,34 @@
-import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
-import Box from '@material-ui/core/Box';
-import {Snackbar} from "@material-ui/core"
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
+import React from "react";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import Link from "@material-ui/core/Link";
+import Box from "@material-ui/core/Box";
+import { Snackbar } from "@material-ui/core";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
 import { Alert } from "@material-ui/lab";
 import Axios from "axios";
-import {MIN_USERNAME_LENGTH, MIN_PASSWORD_LENGTH} from "../../config/configConstant";
-import {doLogin, isLogin} from "../.././services/authService";
+import {
+  MIN_USERNAME_LENGTH,
+  MIN_PASSWORD_LENGTH,
+  adminUsername,
+  adminPassword,
+} from "../../config/configConstant";
+import { doLogin, isLogin } from "../.././services/authService";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
+      {"Copyright © "}
       <Link color="inherit" href="https://material-ui.com/">
         Expertrons
-      </Link>{' '}
+      </Link>{" "}
       {new Date().getFullYear()}
-      {'.'}
+      {"."}
     </Typography>
   );
 }
@@ -31,9 +36,9 @@ function Copyright() {
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
@@ -46,8 +51,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn(props) {
   const classes = useStyles();
-  const[account, setAccount]=React.useState({username:"", password:""});
-  const[error, setError]=React.useState({username:"", password:""});
+  const [account, setAccount] = React.useState({ username: "", password: "" });
+  const [error, setError] = React.useState({ username: "", password: "" });
   const [open, setOpen] = React.useState(false);
 
   const handleClose = (event, reason) => {
@@ -91,15 +96,35 @@ export default function SignIn(props) {
   };
 
   const handleLogin = () => {
-    Axios.post("http://localhost:8080/admin/access", {
-      username:account.username,
-      password:account.password
-    }).then(res=>{
-      doLogin(res.data._id);
-      props.history.push("/admin/dashboard");
-    },err=>{
-      setOpen(true);
-    });
+    const username = account.username;
+    const password = account.password;
+    if (username === adminUsername && password === adminPassword) {
+      Axios.post("http://localhost:8080/admin/access", {
+        username,
+        password,
+      }).then(
+        (res) => {
+          doLogin(res.data._id);
+          props.history.push("/admin/dashboard");
+        },
+        (err) => {
+          setOpen(true);
+        }
+      );
+    } else {
+      Axios.post("http://localhost:8080/mentor/access", {
+        username,
+        password,
+      }).then(
+        (res) => {
+          doLogin(res.data._id);
+          props.history.push("/mentor/dashboard");
+        },
+        (err) => {
+          setOpen(true);
+        }
+      );
+    }
   };
 
   return (
@@ -113,43 +138,43 @@ export default function SignIn(props) {
           Sign in
         </Typography>
         <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="username"
-            label="User name"
-            name="username"
-            autoFocus
-            onChange={(event) => handleChange("username", event)}
-            value={account.username}
-            error={error.username.length>0}
-            helperText={error.username}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            onChange={(event) => handleChange("password", event)}
-            value={account.password}
-            error={error.password.length>0}
-            helperText={error.password}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-            onClick={handleLogin}
-          >
-            Sign In
-          </Button>
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          id="username"
+          label="User name"
+          name="username"
+          autoFocus
+          onChange={(event) => handleChange("username", event)}
+          value={account.username}
+          error={error.username.length > 0}
+          helperText={error.username}
+        />
+        <TextField
+          variant="outlined"
+          margin="normal"
+          required
+          fullWidth
+          name="password"
+          label="Password"
+          type="password"
+          id="password"
+          onChange={(event) => handleChange("password", event)}
+          value={account.password}
+          error={error.password.length > 0}
+          helperText={error.password}
+        />
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+          onClick={handleLogin}
+        >
+          Sign In
+        </Button>
       </div>
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="error">

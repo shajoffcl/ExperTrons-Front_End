@@ -71,7 +71,7 @@ export default function MentorCreater(props) {
       <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
-          Add new mentor
+          Add a new mentor
         </Typography>
         <Grid container spacing={2}>
             <Grid item xs={12}>
