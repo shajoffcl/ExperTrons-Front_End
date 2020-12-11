@@ -1,0 +1,28 @@
+.container{
+    height: 100vh;
+    width: 100vw;
+    background-color: lightblue;
+    background-image: url("https://wallpapercave.com/wp/wp3191229.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.organization-name{
+    width: 40%;
+    height: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: green;
+}
+.navigation{
+    width: 60%;
+    height: 15%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
